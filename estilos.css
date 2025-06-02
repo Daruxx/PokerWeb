@@ -152,9 +152,6 @@ input[type="number"]::-ms-reveal {
     body{
         background-color: #ECEFCA;
     }
-    html, body {
-    max-width: 100%;
-}
 }
 ul{
     margin: 0;
