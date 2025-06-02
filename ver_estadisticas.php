@@ -11,6 +11,9 @@ $stmt->execute();
 $resultPartidas = $stmt->get_result();
 
 while ($partida = $resultPartidas->fetch_assoc()) {
+    if($partida["activa"] == true){
+        continue;
+    }
     $idPartida = $partida['id'];
     $nombrePartida = htmlspecialchars($partida['nombre']);
     $fichasPorEur = $partida['fichas_por_eur'];
