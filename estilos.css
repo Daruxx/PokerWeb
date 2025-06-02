@@ -21,7 +21,6 @@ body{
 table {
   max-width: 100%;
   table-layout: auto;
-  word-break: break-word; /* Para forzar quiebres en celdas demasiado largas */
 }
 
 .titulo{
@@ -152,7 +151,7 @@ input[type="number"]::-ms-reveal {
 
 @media screen and (max-width: 768px) {
     #container {
-        width: 100%;
+        max-width: 100%;
         margin-top: 0;
         border-radius: 0;
     }
