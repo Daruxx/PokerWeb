@@ -1,0 +1,173 @@
+/* Fuentes importadas de google fonts */
+@import url('https://fonts.googleapis.com/css2?family=Poetsen+One&display=swap'); 
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Share+Tech&display=swap');
+
+body{
+    font-family: "Noto Sans", sans-serif;
+    margin: 0; /* Pongo margin y padding a 0 para elegir yo los margin y paddings que quiera y no los default*/
+    padding: 0;
+    background: linear-gradient(100deg, #213448, #ECEFCA);
+    background-attachment: fixed; /*Aunque se haga scroll no se moverá*/
+}
+#container{
+    background-color: #ECEFCA;
+    margin: auto;
+    margin-top: 5%;
+    width: 80%;
+    border-radius: 50px;
+    padding: 20px 10px;
+}
+.titulo{
+    text-align: center;
+    font-size: 2.8rem;
+    color: #547792;
+    font-family: "Poetsen One", sans-serif;
+}
+#menuPrincipal>li>a {
+    font-size: 1.5rem;
+    line-height: 3rem;
+    color: #94B4C1;
+
+}
+a{
+    text-decoration: none;
+}
+#volver{
+    float: right;
+    margin-top: -30px;
+}
+#menuPrincipal>li{
+    transition: transform 0.3s ease; 
+}
+#menuPrincipal>li:hover {
+    transform: scale(1.1); 
+}
+a{
+    transition: transform 0.3s ease; 
+}
+a:hover {
+    transform: scale(1.1); 
+}
+
+
+
+#menuPrincipal{
+    list-style: none;
+    text-align: center;
+}
+
+
+form{
+    line-height: 2.5rem;
+}
+
+#botones{
+    width: 14%;
+    margin: auto;
+    display: block;
+}
+#botones>button,.buscardni{
+    width: 50%;
+    padding: 5px;
+    border-radius: 10px;
+}
+
+table{
+    border-collapse: collapse;
+    margin: auto;
+}
+table tr,td,th{
+    border: 1px solid #547792;
+    padding: 10px;
+}
+
+#anadir{
+    background-color: greenyellow;
+    padding: 5px;
+    border-radius: 15px;
+}
+
+
+
+#listaComprobar {
+    list-style-image: url(img/flecha.png);
+    line-height: 2.5rem;
+}
+
+.eliminar{
+    background-color: red;
+    padding: 5px;
+    border-radius: 15px;
+}   
+
+
+.botonesbuscar{
+    margin: auto;
+    display: block;
+    margin-top: 5px;
+    width: 14%;
+}
+
+#olAnadidoMasivo{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-gap: 10px;
+}
+
+.listaNombres{
+    margin-left: 50px;
+}
+#euros{
+    width: 10%;
+    
+}
+/* Para Chrome, Safari, Edge y Opera */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Para Firefox */
+input[type="number"] {
+    appearance: textfield;
+  -moz-appearance: textfield;
+}
+
+/* Para Edge (algunos casos antiguos) */
+input[type="number"]::-ms-clear,
+input[type="number"]::-ms-reveal {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+
+@media screen and (max-width: 768px) {
+    #container {
+        width: 100%;
+        margin-top: 0;
+        border-radius: 0;
+    }
+    body{
+        background-color: #ECEFCA;
+    }
+    html, body {
+    max-width: 100%;
+}
+}
+ul{
+    margin: 0;
+}
+.jugador>p,.jugador>label{
+    margin-left: 3%;
+}
+.jugador>label{
+    margin-left: 3%;
+}
+.verde{
+    color: green;
+}
+.rojo{
+    color: red;
+}
