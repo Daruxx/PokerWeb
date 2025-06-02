@@ -13,10 +13,17 @@ body{
     background-color: #ECEFCA;
     margin: auto;
     margin-top: 5%;
-    width: 80%;
+    max-width: 80%;
     border-radius: 50px;
     padding: 20px 10px;
+    overflow-x: auto;
 }
+table {
+  max-width: 100%;
+  table-layout: auto;
+  word-break: break-word; /* Para forzar quiebres en celdas demasiado largas */
+}
+
 .titulo{
     text-align: center;
     font-size: 2.8rem;
