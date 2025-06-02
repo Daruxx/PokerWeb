@@ -12,6 +12,7 @@
                 <br>
                 <input type="submit" value="Enviar">
             </form>
+            <a href="cambiar_contra.php" id="volver">Cambiar contraseña</a>
         <?php
     }else{
         $usuario = $_REQUEST["usuario"];
