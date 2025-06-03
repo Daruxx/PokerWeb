@@ -6,20 +6,32 @@ arriba("Estadísticas Generales");
 $mysqli = conectarMySql();
 
 // Procesar formulario de pago
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['jugador_id'], $_POST['cantidad'], $_POST['tipo'])) {
-    $jugador_id = intval($_POST['jugador_id']);
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['emisor_id'], $_POST['receptor_id'], $_POST['cantidad'])) {
+    $emisor_id = intval($_POST['emisor_id']);
+    $receptor_id = intval($_POST['receptor_id']);
     $cantidad = floatval(str_replace(',', '.', $_POST['cantidad'])); // soporte para coma
-    $tipo = ($_POST['tipo'] === 'ha_pagado') ? 'ha_pagado' : 'le_han_pagado';
 
-    $stmt = $mysqli->prepare("INSERT INTO pagos_generales (jugador_id, cantidad, tipo) VALUES (?, ?, ?)");
-    $stmt->bind_param("ids", $jugador_id, $cantidad, $tipo);
-    if ($stmt->execute()) {
-        echo "<p style='color: green; text-align: center;'>✅ Pago registrado correctamente.</p>";
+    if ($emisor_id !== $receptor_id && $cantidad > 0) {
+        // Insertar el pago de quien ha pagado
+        $stmt1 = $mysqli->prepare("INSERT INTO pagos_generales (jugador_id, cantidad, tipo) VALUES (?, ?, 'ha_pagado')");
+        $stmt1->bind_param("id", $emisor_id, $cantidad);
+        $stmt1->execute();
+        $stmt1->close();
+
+        // Insertar el cobro de quien ha recibido el pago
+        $stmt2 = $mysqli->prepare("INSERT INTO pagos_generales (jugador_id, cantidad, tipo) VALUES (?, ?, 'le_han_pagado')");
+        $stmt2->bind_param("id", $receptor_id, $cantidad);
+        $stmt2->execute();
+        $stmt2->close();
+
+        // Redirigir para evitar reenvío con F5
+        header("Location: " . $_SERVER['REQUEST_URI']);
+        exit();
     } else {
-        echo "<p style='color: red; text-align: center;'>❌ Error al registrar el pago.</p>";
+        echo "<p style='color:red;text-align:center;'>❌ Error: el emisor y el receptor deben ser diferentes y el monto debe ser mayor a 0.</p>";
     }
-    $stmt->close();
 }
+
 
 // Obtener balances totales de las partidas
 $sql = "SELECT balances FROM partida";
