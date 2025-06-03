@@ -204,6 +204,46 @@ if(isset($_COOKIE["login"])){
     <button type="submit">Añadir Pago</button>
 </form>
 
+<ul style="width: 60%; margin: 20px auto; list-style-type: none; padding: 0;">
+<?php
+// Obtener pagos agrupados ordenados por id
+$sql = "SELECT pg1.id, pg1.jugador_id AS emisor_id, pg1.cantidad, pg2.jugador_id AS receptor_id 
+        FROM pagos_generales pg1 
+        JOIN pagos_generales pg2 ON 
+            pg1.cantidad = pg2.cantidad AND 
+            pg1.tipo = 'ha_pagado' AND 
+            pg2.tipo = 'le_han_pagado' AND 
+            pg1.id < pg2.id
+        ORDER BY pg1.id DESC
+        LIMIT 20"; // Limitar a los 20 más recientes
+
+$result = $mysqli->query($sql);
+
+$mostrados = [];
+
+while ($fila = $result->fetch_assoc()) {
+    $emisor_id = $fila['emisor_id'];
+    $receptor_id = $fila['receptor_id'];
+    $cantidad = $fila['cantidad'];
+    $key = $emisor_id . '_' . $receptor_id . '_' . $cantidad;
+    
+    // Evitar duplicados si hay múltiples coincidencias
+    if (in_array($key, $mostrados)) continue;
+    $mostrados[] = $key;
+
+    $emisor_nombre = isset($jugadores[$emisor_id]) ? htmlspecialchars($jugadores[$emisor_id]) : "Jugador #$emisor_id";
+    $receptor_nombre = isset($jugadores[$receptor_id]) ? htmlspecialchars($jugadores[$receptor_id]) : "Jugador #$receptor_id";
+
+    echo "<li style='margin: 6px 0; text-align: center;'>
+            <b>$emisor_nombre</b> ha pagado 
+            <b>" . number_format($cantidad, 2, ',', '.') . " €</b> a 
+            <b>$receptor_nombre</b>
+          </li>";
+}
+?>
+</ul>
+
+
 <?php
 }
 // Calcular la suma de los balances actuales
