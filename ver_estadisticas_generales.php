@@ -183,8 +183,16 @@ if(isset($_COOKIE["login"])){
 ?>
 
 <form method="POST">
-    <label for="jugador_id">Jugador:</label>
-    <select name="jugador_id" required>
+    <label for="emisor_id">Quién Paga:</label>
+    <select name="emisor_id" required>
+        <?php
+        foreach ($jugadores as $id => $nombre) {
+            echo "<option value='$id'>" . htmlspecialchars($nombre) . "</option>";
+        }
+        ?>
+    </select>
+    <label for="receptor_id">A Quién:</label>
+    <select name="receptor_id" required>
         <?php
         foreach ($jugadores as $id => $nombre) {
             echo "<option value='$id'>" . htmlspecialchars($nombre) . "</option>";
@@ -193,13 +201,9 @@ if(isset($_COOKIE["login"])){
     </select>
     <label for="cantidad">Cantidad (€):</label>
     <input type="number" step="0.01" name="cantidad" required>
-    <label for="tipo">Tipo:</label>
-    <select name="tipo" required>
-        <option value="ha_pagado">Ha Pagado</option>
-        <option value="le_han_pagado">Le Han Pagado</option>
-    </select>
     <button type="submit">Añadir Pago</button>
 </form>
+
 <?php
 }
 // Calcular la suma de los balances actuales
