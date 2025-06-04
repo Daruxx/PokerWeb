@@ -174,25 +174,47 @@ $stmtUpdateBalance->execute();
 
                     }catch(mysqli_sql_exception $e){
                     }
-                }if(isset($_REQUEST['jugadorPaga'])){
-                    if($_REQUEST['jugadorRecibe'] != "banca"){
-                        $sql = "insert into pago(tipo,importe_en_euros,jugador_paga,jugador_recibe,id_partida) values(?,?,?,?,?)";
+                }if (isset($_REQUEST['jugadorPaga'])) {
+                    $importe = $_REQUEST["euros"];
+                    $jugadorRecibe = $_REQUEST["jugadorRecibe"];
+                    $tipo = ($jugadorRecibe == "banca") ? "banca" : "jugador";
+                                
+                    if ($_REQUEST["jugadorPaga"] === "TODOS" && $jugadorRecibe == "banca") {
+                        // Obtener todos los jugadores de la partida
+                        $sql = "SELECT id_jugador FROM partida_jugador WHERE id_partida = ?";
                         $stmt = $conexion->prepare($sql);
-                        $tipo = "jugador";
-                        $stmt->bind_param("sdiii", $tipo,$_REQUEST["euros"],$_REQUEST["jugadorPaga"],$_REQUEST["jugadorRecibe"],$idPartida);
+                        $stmt->bind_param("i", $idPartida);
                         $stmt->execute();
-                        alert("Añadido correctamente");
-                    }else{
-                        $sql = "insert into pago(tipo,importe_en_euros,jugador_paga,id_partida) values(?,?,?,?)";
-                        $stmt = $conexion->prepare($sql);
-                        $tipo = "banca";
-                        $stmt->bind_param("sdii", $tipo,$_REQUEST["euros"],$_REQUEST["jugadorPaga"],$idPartida);
-                        $stmt->execute();
-                        alert("Añadido correctamente");
-                    }
-                    header("Location: ".$_SERVER['PHP_SELF']."?partida=".$_REQUEST["partida"]);
+                        $res = $stmt->get_result();
                     
-                }
+                        while ($fila = $res->fetch_assoc()) {
+                            $idJugador = $fila["id_jugador"];
+                            $sqlInsert = "INSERT INTO pago(tipo, importe_en_euros, jugador_paga, id_partida) VALUES (?, ?, ?, ?)";
+                            $stmtInsert = $conexion->prepare($sqlInsert);
+                            $stmtInsert->bind_param("sdii", $tipo, $importe, $idJugador, $idPartida);
+                            $stmtInsert->execute();
+                        }
+                        alert("Pagos añadidos para todos los jugadores a la banca");
+                    } elseif ($_REQUEST["jugadorPaga"] === "TODOS") {
+                        alert("No puedes usar TODOS si el receptor no es la banca");
+                    } elseif ($jugadorRecibe != "banca") {
+                        $sql = "INSERT INTO pago(tipo, importe_en_euros, jugador_paga, jugador_recibe, id_partida) VALUES (?, ?, ?, ?, ?)";
+                        $stmt = $conexion->prepare($sql);
+                        $stmt->bind_param("sdiii", $tipo, $importe, $_REQUEST["jugadorPaga"], $jugadorRecibe, $idPartida);
+                        $stmt->execute();
+                        alert("Pago añadido correctamente");
+                    } else {
+                        $sql = "INSERT INTO pago(tipo, importe_en_euros, jugador_paga, id_partida) VALUES (?, ?, ?, ?)";
+                        $stmt = $conexion->prepare($sql);
+                        $stmt->bind_param("sdii", $tipo, $importe, $_REQUEST["jugadorPaga"], $idPartida);
+                        $stmt->execute();
+                        alert("Pago añadido correctamente");
+                    }
+                
+                    header("Location: " . $_SERVER['PHP_SELF'] . "?partida=" . $_REQUEST["partida"]);
+                    exit();
+}
+
 
                 
 
@@ -302,6 +324,7 @@ $stmtUpdateBalance->execute();
                 echo "<input type=hidden value=".$idPartida." name=partida>";
                 echo "<p>";
                 echo "<select name=jugadorPaga>";
+                    echo "<option value=TODOS>TODOS</option>"; 
                     $sql = "select * from partida_jugador where id_partida = ?";
                     $stmt = $conexion->prepare($sql);
                     $stmt->bind_param("i", $idPartida);
