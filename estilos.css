@@ -179,5 +179,5 @@ ul{
     color: red;
 }
 .enlinea{
-    display: inline;
+    display: flex;
 }
