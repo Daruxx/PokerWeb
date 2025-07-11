@@ -18,7 +18,19 @@
         echo "<script>window.location.href='editar_partida_directo.php'</script>";
         abajo();
         exit();
-    }elseif(!isset($_REQUEST["partida"])){
+    }elseif(isset($_POST['eliminarPago'])) {
+    $idPago = intval($_POST['eliminarPago']);
+    
+    $sql = "DELETE FROM pago WHERE id = ?";
+    $stmt = $conexion->prepare($sql);
+    $stmt->bind_param("i", $idPago);
+    $stmt->execute();
+    
+    echo "<script>alert('Pago eliminado correctamente');</script>";
+    echo "<script>window.location.href='editar_partida_directo.php?partida=" . $_POST['partida'] . "'</script>";
+    abajo();
+    exit();
+}elseif(!isset($_REQUEST["partida"])){
         $sql = "select * from partida where activa=1";
         $stmt = $conexion->prepare($sql);
         $stmt->execute();
@@ -296,7 +308,16 @@ $stmtUpdateBalance->execute();
                             $nombreRecibe = ($resNombre->num_rows > 0) ? $resNombre->fetch_assoc()["nombre"] : "Desconocido";
                             $stmtNombre->close();
                         
-                            echo "<li><p><b>$nombrePaga</b> paga <b>$importe €</b> a <b>$nombreRecibe</b></p></li>";
+                            echo "<li><p><b>$nombrePaga</b> paga <b>$importe €</b> a <b>$nombreRecibe</b></p>";
+                            $idPago = $pago['id']; // ID del pago
+
+                            // Al final del <li> de cada pago:
+                            echo "<form method='post' style='display:inline' onsubmit='return confirm(\"¿Eliminar este pago?\")'>";
+                            echo "<input type='hidden' name='eliminarPago' value='$idPago'>";
+                            echo "<input type='hidden' name='partida' value='$idPartida'>";
+                            echo "<button type='submit'>❌</button>";
+                            echo "</form></li>";
+
                         
                         } else {
                             $fichasEsperadas += $pago["importe_en_euros"]*$fichasPorEur;
@@ -311,7 +332,12 @@ $stmtUpdateBalance->execute();
                             $nombrePaga = ($resNombre->num_rows > 0) ? $resNombre->fetch_assoc()["nombre"] : "Desconocido";
                             $stmtNombre->close();
                         
-                            echo "<li><p><b>$nombrePaga</b> compra <b>$importe €</b> a la banca</p></li>";
+                            echo "<li><p><b>$nombrePaga</b> compra <b>$importe €</b> a la banca</p>";
+                            echo "<form method='post' style='display:inline' onsubmit='return confirm(\"¿Eliminar este pago?\")'>";
+                            echo "<input type='hidden' name='eliminarPago' value='$idPago'>";
+                            echo "<input type='hidden' name='partida' value='$idPartida'>";
+                            echo "<button type='submit'>❌</button>";
+                            echo "</form></li>";
                         }
                     }
                     echo "<input type=hidden value=$fichasEsperadas id=fichasEsperadas>";
