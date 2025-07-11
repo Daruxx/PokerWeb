@@ -26,7 +26,7 @@
     $stmt->bind_param("i", $idPago);
     $stmt->execute();
     
-    echo "<script>alert('Pago eliminado correctamente');</script>";
+    echo "<script>alert('DELETE FROM pago WHERE id = $idPago');</script>";
     echo "<script>window.location.href='editar_partida_directo.php?partida=" . $_POST['partida'] . "'</script>";
     abajo();
     exit();
