@@ -308,7 +308,7 @@ $stmtUpdateBalance->execute();
                             $nombreRecibe = ($resNombre->num_rows > 0) ? $resNombre->fetch_assoc()["nombre"] : "Desconocido";
                             $stmtNombre->close();
                         
-                            echo "<li><p><b>$nombrePaga</b> paga <b>$importe €</b> a <b>$nombreRecibe</b></p>";
+                            echo "<li class=enlinea><p><b>$nombrePaga</b> paga <b>$importe €</b> a <b>$nombreRecibe</b></p>";
                             $idPago = $pago['id']; // ID del pago
 
                             // Al final del <li> de cada pago:
@@ -323,6 +323,7 @@ $stmtUpdateBalance->execute();
                             $fichasEsperadas += $pago["importe_en_euros"]*$fichasPorEur;
                             $idPaga = $pago["jugador_paga"];
                             $importe = $pago["importe_en_euros"];
+                            $idPago = $pago['id']; // ID del pago
                         
                             $sqlNombre = "SELECT nombre FROM persona WHERE id = ?";
                             $stmtNombre = $conexion->prepare($sqlNombre);
@@ -332,7 +333,7 @@ $stmtUpdateBalance->execute();
                             $nombrePaga = ($resNombre->num_rows > 0) ? $resNombre->fetch_assoc()["nombre"] : "Desconocido";
                             $stmtNombre->close();
                         
-                            echo "<li><p><b>$nombrePaga</b> compra <b>$importe €</b> a la banca</p>";
+                            echo "<li class=enlinea><p><b>$nombrePaga</b> compra <b>$importe €</b> a la banca</p>";
                             echo "<form method='post' style='display:inline' onsubmit='return confirm(\"¿Eliminar este pago?\")'>";
                             echo "<input type='hidden' name='eliminarPago' value='$idPago'>";
                             echo "<input type='hidden' name='partida' value='$idPartida'>";
