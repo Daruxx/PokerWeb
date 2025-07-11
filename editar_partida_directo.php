@@ -18,7 +18,19 @@
         echo "<script>window.location.href='editar_partida_directo.php'</script>";
         abajo();
         exit();
-    }elseif(!isset($_REQUEST["partida"])){
+    }elseif(isset($_POST['eliminarPago'])) {
+    $idPago = intval($_POST['eliminarPago']);
+    
+    $sql = "DELETE FROM pago WHERE id = ?";
+    $stmt = $conexion->prepare($sql);
+    $stmt->bind_param("i", $idPago);
+    $stmt->execute();
+    
+    echo "<script>alert('Pago eliminado correctamente');</script>";
+    echo "<script>window.location.href='editar_partida_directo.php?partida=" . $_POST['partida'] . "'</script>";
+    abajo();
+    exit();
+}elseif(!isset($_REQUEST["partida"])){
         $sql = "select * from partida where activa=1";
         $stmt = $conexion->prepare($sql);
         $stmt->execute();
@@ -297,6 +309,15 @@ $stmtUpdateBalance->execute();
                             $stmtNombre->close();
                         
                             echo "<li><p><b>$nombrePaga</b> paga <b>$importe €</b> a <b>$nombreRecibe</b></p></li>";
+                            $idPago = $pago['id']; // ID del pago
+
+                            // Al final del <li> de cada pago:
+                            echo "<form method='post' style='display:inline' onsubmit='return confirm(\"¿Eliminar este pago?\")'>";
+                            echo "<input type='hidden' name='eliminarPago' value='$idPago'>";
+                            echo "<input type='hidden' name='partida' value='$idPartida'>";
+                            echo "<button type='submit'>❌</button>";
+                            echo "</form>";
+
                         
                         } else {
                             $fichasEsperadas += $pago["importe_en_euros"]*$fichasPorEur;
